@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ch">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" th:href="@{/static/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/userInfo/relgoods.css}"/>
+    <script type="text/javascript" th:src="@{/static/layui/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/vue.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/userInfo/ckplayer.js}"></script>
+    <title>東洋大学中古ショッピング | 新商品</title>
+    <script th:inline="javascript">
+        var basePath = [[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]];
+    </script>
+</head>
+<body style="background-color:white">
+<form class="layui-form" id="goodsform" style="margin-top: 10px">
+    <div class="layui-form-item">
+        <label class="layui-form-label"><span style="color: red">*</span>商品名</label>
+        <div class="layui-input-block">
+            <input type="text" name="commname" lay-verify="required" autocomplete="off" placeholder="商品名を入力してください"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label"><span style="color: red">*</span>商品説明</label>
+        <div class="layui-input-block">
+            <textarea placeholder="商品説明を入力してください(ブランドモデル、新旧、入手ルート、転手原因…)" name="commdesc" lay-verify="required" autocomplete="off"
+                      class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品動画</label>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn" id="test1">動画をアップロードする</button>
+        </div>
+    </div>
+    <div class="videosamplex" id="videosamplex" style="width:600px;height:400px;margin-left:100px;margin-bottom:15px;display: none">
+        <video id="videoplayer"></video>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">商品原価.</label>
+        <div class="layui-input-block">
+            <input type="number" name="orimoney" autocomplete="off" placeholder="商品原価を入力してください"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label"><span style="color: red">*</span>商品の販売価格.</label>
+        <div class="layui-input-block">
+            <input type="number" name="thinkmoney" lay-verify="required" autocomplete="off" placeholder="商品の販売価格を入力してください"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"><span style="color: red">*</span>商品種別</label>
+        <div class="layui-input-block">
+            <select name="category" lay-filter="required">
+                <option value="電子製品" selected="">電子製品</option>
+                <option value="書籍">書籍</option>
+                <option value="生活用品">生活用品</option>
+                <option value="服装">服装</option>
+                <option value="化粧品">化粧品</option>
+                <option value="自転車">自転車</option>
+                <option value="他にも">他にも</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"><span style="color: red">*</span>一般的なオプション</label>
+        <div class="layui-input-block">
+            <input type="radio" name="common" value="値引きしない" title="値引きしない" checked="">
+            <input type="radio" name="common" value="価格は交渉できます" title="価格は交渉できます">
+            <input type="radio" name="common2" value="郵送できます" title="郵送できます" checked="">
+            <input type="radio" name="common2" value="キャンパス内取引" title="キャンパス内取引">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"><span style="color: red">*</span>商品写真</label>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn" id="test2">写真をアップロード</button>
+        </div>
+    </div>
+    <div id="mainimage" style="display: none;margin-left:100px;margin-bottom:10px">
+        <img :src="mainimg" style="width:300px;height:200px;cursor: pointer" id="imageurl"
+             @click="openimg(mainimg)">
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"><span style="color: red">*</span>商品他の写真</label>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn" id="test3">他の写真をアップロード(最大3枚)</button>
+        </div>
+    </div>
+    <div id="otherimages" style="margin-top:0px;display: none;margin-left:100px;margin-bottom:10px">
+        <div class="imgDiv" v-for="(img,index) in listimages"
+             :key="index" :id="'img'+index" @mouseover="mouseOver(index)" @mouseleave="mouseLeave(index)">
+            <img :src="img.imgsrc" style="width:300px;height:200px;cursor: pointer"
+                 @click="openimg(img.imgsrc)">
+            <img th:src="@{/static/images/close.png}" class="delete"
+                 @click="delimage(index)" :id="'del'+index" style="cursor: pointer">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-block" style="color:#C62F2F">
+            <p>ヒント：国家法律法規違反などの商品(例えば麻薬、刃物、銃器)の配布はご遠慮ください</p>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit="" id="demo1" lay-filter="demo1">提出</button>
+        </div>
+    </div>
+</form>
+</body>
+<script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/userInfo/relgoods.js}"></script>
+</html>

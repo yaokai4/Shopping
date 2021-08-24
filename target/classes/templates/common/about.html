@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7"><![endif]-->
+<!--[if IE 8]>
+<html class="ie ie8"><![endif]-->
+<!--[if IE 9]>
+<html class="ie ie9"><![endif]-->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:v-bind="http://www.w3.org/1999/xhtml"
+      xmlns="http://www.w3.org/1999/html" lang="ch">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <title>サイトについて</title>
+    <!-- Fonts-->
+
+
+    <!--<noscript><link rel="stylesheet" th:href="@{assets/css/noscript.css}" /></noscript>-->
+    <link rel="stylesheet" th:href="@{/static/css/halo.css}">
+    <link rel="stylesheet" th:href="@{/static/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/static/css/bootstrap2.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/_bootswatch.scss}">
+    <link rel="stylesheet" th:href="@{/static/css/_variables.scss}">
+    <link rel="stylesheet" th:href="@{/static/css/fontsgoogleapis.css}">
+    <link rel="stylesheet" th:href="@{/static/plugins/font-awesome/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/static/plugins/ps-icon/style.css}">
+    <link rel="stylesheet" th:href="@{/static/layui/css/layui.css}"/>
+    <!-- CSS Library-->
+    <link rel="stylesheet" th:href="@{/static/plugins/bootstrap/dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/static/plugins/owl-carousel/assets/owl.carousel.css}">
+    <link rel="stylesheet" th:href="@{/static/font-awesome/css/font-awesome.css}">
+    <link rel="stylesheet" th:href="@{/static/plugins/slick/slick/slick.css}">
+    <link rel="stylesheet" th:href="@{/static/plugins/bootstrap-select/dist/css/bootstrap-select.min.css}">
+    <link rel="stylesheet" th:href="@{/static/plugins/Magnific-Popup/dist/magnific-popup.css}">
+    <link rel="stylesheet" th:href="@{/static/plugins/jquery-ui/jquery-ui.min.css}">
+    <link rel="stylesheet" th:href="@{/static/plugins/revolution/css/settings.css}">
+    <link rel="stylesheet" th:href="@{/static/plugins/revolution/css/layers.css}">
+    <link rel="stylesheet" th:href="@{/static/plugins/revolution/css/navigation.css}">
+    <script type="text/javascript" th:src="@{/static/layui/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/js/vue.js}"></script>
+    <link rel="stylesheet" th:href="@{/static/css/style.css}">
+    <script th:inline="javascript">
+        var basePath = [[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]];
+        var userid = [[${session.userid}]];
+    </script>
+</head>
+<!--[if IE 7]>
+<body class="ie7 lt-ie8 lt-ie9 lt-ie10"><![endif]-->
+<!--[if IE 8]>
+<body class="ie8 lt-ie9 lt-ie10"><![endif]-->
+<!--[if IE 9]>
+<body class="ie9 lt-ie10"><![endif]-->
+<body class="ps-loading">
+
+<header class="header" th:fragment="myheader">
+    <div class="header__top">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12">
+                    <p>東洋大学中古ショッピングサイト.大学内で直接取引と郵送ができます！</p>
+                </div>
+                <div class="col-lg-6 col-md-4 col-sm-6 col-xs-12">
+                    <div class="header__actions">
+                        <div th:if="${session.userid!=null}" style="line-height:40px">
+                            <img src="" style="width:30px;display: none" id="avatars" class="layui-circle">
+                            <a th:href="@{/user/center}" target="_blank"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;個人中心&nbsp;&nbsp;</a>
+                            <!--<a href="//www.runoob.com" target="_blank"><i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp;个人主页&nbsp;&nbsp;</a>-->
+                            <!--<a href="//www.runoob.com"><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;消息通知&nbsp;&nbsp;</a>-->
+                            <a th:href="@{/user/logout}"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;ログアウト</a>
+                            <script>
+                                $.ajax({
+                                    url: basePath + "/user/avatar",
+                                    data: "",
+                                    contentType: "application/json;charset=UTF-8",
+                                    type: "post",
+                                    dataType: "json",
+                                    success: function (data) {
+                                        $("#avatars").attr("src",data.data.uimage);
+                                        $("#avatars").show();
+                                    },error:function () {
+                                        layer.msg('システムエラー', {
+                                            time: 1500,
+                                            icon: 2,
+                                            offset: '150px'
+                                        });
+                                    }
+                                });
+                            </script>
+                        </div>
+                        <a th:if="${session.userid==null}" th:href="@{/login}">ログイン & 登録アカウント</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="navigation">
+        <div class="container-fluid">
+            <div class="navigation__column left">
+                <div class="header__logo"><a class="ps-logo" th:href="@{/}">
+                    <img th:src="@{/static/images/logo.png}" alt=""></a></div>
+            </div>
+            <div class="navigation__column center">
+                <ul class="main-menu menu">
+                    <li class="menu-item menu-item-has-children dropdown"><a th:href="@{/}">ホームページ.</a>
+                    <li class="menu-item menu-item-has-children has-mega-menu"><a th:href="@{/product-listing}">全部商品</a>
+                    <li class="menu-item menu-item-has-children dropdown"><a th:href="@{/user/newslist}">掲示板</a></li>
+                    <li class="menu-item menu-item-has-children dropdown"><a th:href="@{/about}">サイトについて</a></li>
+                    <!--<li class="menu-item menu-item-has-children dropdown"><a th:href="@{/contacts}">連絡先</a></li>-->
+                    <li class="menu-item menu-item-has-children dropdown"><a href="https://yaokai.vip">姚凱のBlog</a></li>
+                </ul>
+            </div>
+            <div class="navigation__column right">
+                <form class="ps-search--header layui-form" th:action="@{/product-search}" method="get">
+                    <input class="form-control" type="text" name="keys"
+                           lay-verify="required" lay-reqtext="商品のキーワードは空にしてはいけません？" placeholder="">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="tosearch"><i class="ps-icon-search"></i></button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="header-services" th:fragment="myhdservices">
+    <div class="ps-services owl-slider" data-owl-auto="true" data-owl-loop="true" data-owl-speed="7000" data-owl-gap="0"
+         data-owl-nav="true" data-owl-dots="false" data-owl-item="1" data-owl-item-xs="1" data-owl-item-sm="1"
+         data-owl-item-md="1" data-owl-item-lg="1" data-owl-duration="1000" data-owl-mousedrag="on">
+        <p class="ps-service"><i class="ps-icon-delivery"></i>主に東洋大学の先生や学生が使用する中古品取引システム！</p>
+        <p class="ps-service"><i class="ps-icon-delivery"></i> 安全を信頼して、もっと良い商品を発見！</p>
+        <p class="ps-service"><i class="ps-icon-delivery"></i>姚凱が開発したシステム！東洋大学AO総合性選抜を使って</p>
+    </div>
+</div>
+</br>
+
+<div class="halo">
+    <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;東洋大学中古ショッピングサイトは姚凱が開発した。ao総合性選抜に参加するためのシステム！<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;このシステムは私が半年かけて開発したものです。 半年間東洋大学のために頑張ってきました。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;システムが開発したコードは100%私が自分で書いたものです。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Javaバックエンド·フレームワークおよびフロントエンド·フレームワークおよびUIは除く)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;このサイトを開発する前に。 日本に来たことがありません。 ずっと東洋大学を受験しようとしていました。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;そこで東洋大学には計算機科学の総合的な選抜があることに気づいた。 特に私に向いていて、<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;私はコンピュータが大好きです。プログラミングも五年間の経験があります。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;東洋大学が3万人の超大学校だと思いました。 私には一つの考えがあります。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日本の中古取引はとても平凡だからです。 例えばメルカリなどのソフトウェア<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;しかし私のこのサイトの開発コンセプトは対面取引です。 みんな大学やキャンパスにいます。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一緒に授業が終わったら直接キャンパス内で取引することができます。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;対面取引の利点は。 郵便配達の長い待ちを免除した。 誰かが購入した日だけ取引できます。 特別な便利<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;オンライン取引(クレジットカード支払い、PayPay、linepayなど)のように企業認証が必要だからです。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;それで私はオンライン取引支払いを追加しなかった。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;もちろんこのサイトはまだテスト段階です。システムエラーの発生を避ける。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;もし入学後約三ヶ月かけてシステムの更新とメンテナンスを行う必要があります。<br>
+    <!--
+    <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;东洋大学二手购物网站是姚凯开发。用来参加东洋大学ao综合性选拔的系统！<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这个系统是我用时半年时间开发的。半年以来一直都是为东洋大学而努力。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;系统开发的代码是100%我自己写的。（Java后端框架和前端框架以及UI除外）<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;开发这个网站之前的时候。从来日本以来。我就一直在准备报考东洋大学。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;所以注意到东洋大学有计算机科学的综合性选拔。特别的适合我，我很热爱计算机。编程也有五年经验。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;想到东洋大学是一个3万人的超大学校。我就有一个想法。因为日本二手交易特别的平凡。比如メルカリ等软件<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;但是我这个网站的开发理念是面对面交易。大家都在一个大学，甚至一个校区。在一起上课完之后直接可以在校园内交易。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;面对面交易的优势是。免去了邮送的漫长等待。只要有人购买当天就可以交易。特别的方便。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;因为在线交易如（银行卡信用卡支付，PayPay，linepay等）需要企业认证。所以我没有添加在线交易支付。<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当然这个网站目前还在测试阶段。如果入学后大约我还需要花三个月时间进行系统更新和维护。避免出现系统测试。<br>
+    -->
+</div>
+<!-- Page Wrapper -->
+<!--     1111111111111111111111111111111111111111111111111111111111111111111111111 -->
+
+
+<!-- Page Wrapper -->
+
+<!--     1111111111111111111111111111111111111111111111111111111111111111111111111 -->
+<br>
+
+
+
+
+
+    <div class="ps-footer bg--cover" data-background="images/background/parallax.jpg">
+        <div class="ps-footer__content">
+            <div class="ps-container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 ">
+                        <aside class="ps-widget--footer ps-widget--info">
+                            <header><a class="ps-logo" th:href="@{/}"><img th:src="@{/static/images/logo-white.png}"
+                                                                           alt=""></a>
+                                <h3 class="ps-widget__title"> 東洋大学中古ショッピング</h3>
+                            </header>
+                            <footer>
+                                <p><strong>〒115-8650 東京都北区赤羽台１丁目７−11</strong></p>
+                                <p>Email: <a href='mailto:admin@yaokai.vip'>admin@yaokai.vip</a></p>
+                                <p>Phone: +81 080 4293 6444</p>
+                                <p>Fax: +81 03 5924 2100</p>
+                            </footer>
+                        </aside>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 ">
+                        <aside class="ps-widget--footer ps-widget--info second">
+                            <header>
+                                <h3 class="ps-widget__title">東洋大学 情報連携学部 (INIAD)</h3>
+                            </header>
+                            <footer>
+                                <p><strong>姚凱が開発したシステム。東洋大学総合性選抜に参加するために使われています</strong></p>
+                                <p>プログラミング、人生、認知、そして私の考えについて。</p>
+                                <p>私の夢は東洋大学に合格することです🥰 </p>
+                                <p> COPYRIGHT © 2021 東洋大学 情報連携学部‍‍</p>
+                            </footer>
+                        </aside>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 ">
+                        <aside class="ps-widget--footer ps-widget--link">
+                            <header>
+                                <h3 class="ps-widget__title">まだ何を書くかまだ決めていない</h3>
+                            </header>
+                            <footer>
+                                <ul class="ps-list--link">
+                                    <li><a href="https://www.toyo.ac.jp/">まだ何を書くかまだ決めていない</a></li>
+                                    <li><a href="https://www.toyo.ac.jp/about/access/akabanedai/">まだ何を書くかまだ決めていない</a></li>
+                                    <li><a href="https://www.toyo.ac.jp/nyushi/">まだ何を書くかまだ決めていない</a></li>
+                                    <li><a href="https://www.iniad.org/">まだ何を書くかまだ決めていない </a></li>
+                                </ul>
+                            </footer>
+                        </aside>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 ">
+                        <aside class="ps-widget--footer ps-widget--link">
+                            <header>
+                                <h3 class="ps-widget__title">東洋大学について</h3>
+                            </header>
+                            <footer>
+                                <ul class="ps-list--line">
+                                    <li><a href="https://www.toyo.ac.jp/">東洋大学公式サイト</a></li>
+                                    <li><a href="https://www.toyo.ac.jp/about/access/akabanedai/">赤羽台キャンパス</a></li>
+                                    <li><a href="https://www.toyo.ac.jp/nyushi/">東洋大学入学試験情報サイト</a></li>
+                                    <li><a href="https://www.iniad.org/">東洋大学 情報連携学部 (INIAD)</a></li>
+                                    <li><a href="https://www.toyo.ac.jp/about/access/">アクセス(東洋大学)</a></li>
+                                </ul>
+                            </footer>
+                        </aside>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 ">
+                        <aside class="ps-widget--footer ps-widget--link">
+                            <header>
+                                <h3 class="ps-widget__title">私について</h3>
+                            </header>
+                            <footer>
+                                <ul class="ps-list--line">
+                                    <li><a href="https://www.yaokai.vip/">姚凱のBlog</a></li>
+                                    <li><a href="https://bbs.yaokai.vip">学内フォーラムシステム</a></li>
+                                    <li><a href="#">志望理由書</a></li>
+                                    <li><a href="#">私の履歴書</a></li>
+                                </ul>
+                            </footer>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- JS Library-->
+<script type="text/javascript" th:src="@{/static/plugins/jquery/dist/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/plugins/bootstrap/dist/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/plugins/jquery-bar-rating/dist/jquery.barrating.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/plugins/owl-carousel/owl.carousel.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/plugins/gmap3.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/plugins/imagesloaded.pkgd.js}"></script>
+<script type="text/javascript" th:src="@{/static/plugins/isotope.pkgd.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/plugins/bootstrap-select/dist/js/bootstrap-select.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/plugins/jquery.matchHeight-min.js}"></script>
+<script type="text/javascript" th:src="@{/static/plugins/slick/slick/slick.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/plugins/elevatezoom/jquery.elevatezoom.js}"></script>
+<script type="text/javascript" th:src="@{/static/plugins/Magnific-Popup/dist/jquery.magnific-popup.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/plugins/jquery-ui/jquery-ui.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/ditugoogle.js}"></script>
+<script type="text/javascript" th:src="@{/static/plugins/revolution/js/jquery.themepunch.tools.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/plugins/revolution/js/jquery.themepunch.revolution.min.js}"></script>
+<!-- Custom scripts-->
+<script type="text/javascript" th:src="@{/static/js/main.js}"></script>
+<script type="text/javascript" th:src="@{/static/layui/layui.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/common/index.js}"></script>
+<script>
+    layui.use(['form', 'layer','carousel'], function () {
+        var form = layui.form;
+        var $ = layui.jquery,
+            layer = layui.layer;
+        var carousel = layui.carousel;
+        carousel.render({
+            elem: '#test10'
+            , width: '100%'
+            , height: '815px'
+            ,interval: 5000
+        });
+    });
+
+    function tologin() {
+        location.href = basePath + "/login";
+    }
+</script>
+</body>
+</html>
