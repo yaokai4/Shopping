@@ -39,6 +39,8 @@ https://www.youtube.com/watch?v=DSd2vXBoaqM
 携帯電話番号とメールボックスの形式は判断されますが、メールボックスが使用されているかどうかは判断されません。
 - 3. SMS検証クラウドサービスには支払いが必要なため、携帯電話のSMS検証を追加せずに一時的にパスワードをリセットします。 （Google Cloud、Amazon Cloudなど）公式に使用された後に追加します
 
+### Xmind
+![](src/main/resources/resources/中古システム.png)
 ### 商品モジュール
 - 1.製品を公開する
 - 2.製品を変更します
