@@ -17,7 +17,7 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
         Object admin = request.getSession().getAttribute("admin");
         if (StringUtils.isEmpty(user) && StringUtils.isEmpty(admin)) {
             //未登陆，返回首页
-            request.setAttribute("msg", "没有权限请先登陆");
+            request.setAttribute("msg", "権限がないので先にログインしてください");
             response.sendRedirect(request.getContextPath() + "/");//重定向
 //            request.getRequestDispatcher("/").forward(request,response);//转发
             return false;

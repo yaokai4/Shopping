@@ -65,71 +65,59 @@ public class LoginController {
         ValidateCode vCode = new ValidateCode(820, 200, 5, 80);
         vCode.write(response.getOutputStream());
     }
-    /**注册时发送短信验证码
-     * 1.判断是否为注册类型验证码
-     * 2.判断手机号格式是否正确
-     * 3.判断手机号是否已经注册过
-     * 4.发送注册验证码并存入map集合
-     * */
 
-    /**注册
-     * 1.前端传入用户名（username）、密码（password）、邮箱（email）、手机号（mobilephone）、验证码（vercode）
-     * 2.查询账号是否已经注册
-     * 3.查询用户名是否已存在
-     * 4.判断验证码是否有效或正确
-     * 5.注册
-     * */
+
+    /**新規登録。
+     *1.フロントエンドにユーザー名(Username)、パスワード(Password)、メールボックス(Email)、携帯電話番号(Mobilephone)、検証コード(Vercode)が入力されます。
+     2.アカウントが登録されているかどうかを調べる。
+     *3.ユーザー名が存在するかどうかを問い合わせる。
+     *4.検証コードが有効かどうかを判断する。
+     *5.登録する.
+     **/
     @ResponseBody
     @PostMapping("/user/register")
-    public  ResultVo userReg(@RequestBody UserInfo userInfo, HttpSession session) {
+    public  ResultVo userReg(@RequestBody UserInfo userInfo, HttpSession session) { //ユーザー情報をしゅとくする
         String username = userInfo.getUsername();
         String password = userInfo.getPassword();
         String mobilephone = userInfo.getMobilephone();
         String vercode = userInfo.getVercode();
         Login login = new Login().setMobilephone(mobilephone);
-        //查询账号是否已经注册
+        //アカウントが登録されているかどうかを調べる
         Login userIsExist = loginService.userLogin(login);
-        if (!StringUtils.isEmpty(userIsExist)){//用户账号已经存在
+        if (!StringUtils.isEmpty(userIsExist)){//ユーザーアカウントはすでに存在します
             return new ResultVo(false, StatusCode.ERROR,"このユーザーはすでに登録しました");
         }
-        login.setUsername(username).setMobilephone(null);
+        login.setUsername(username).setMobilephone(null); //ユーザー名と携帯番号が登録されているかどうかを調べる
         Login userNameIsExist = loginService.userLogin(login);
-        if (!StringUtils.isEmpty(userNameIsExist)){//用户名已经存在
-            return new ResultVo(false, StatusCode.ERROR,"ユーザー名はすでに存在していますので、交換してください");
+        if (!StringUtils.isEmpty(userNameIsExist)){//ユーザー名はすでに存在します
+            return new ResultVo(false, StatusCode.ERROR,"ユーザー名はすでに存在していますので、変更してください");
         }
-       // String rel = phonecodemap1.get(mobilephone);
-      //  if (StringUtils.isEmpty(rel)) {//验证码到期 或者 没发送短信验证码
-        //    return new ResultVo(false,StatusCode.ERROR,"请重新获取验证码");
-      //  }
-       // if (rel.equalsIgnoreCase(vercode)) {//验证码正确
-            //盐加密
-            String passwords = new Md5Hash(password, "Campus-shops").toString();
-            String userid = KeyUtil.genUniqueKey();
+
+            //Md5塩暗号化 Hashアルゴリズム
+            String passwords = new Md5Hash(password, "Campus-shops").toString(); //Md5塩暗号化
+            String userid = KeyUtil.genUniqueKey();//ユーザーidを取得する
             login.setId(KeyUtil.genUniqueKey()).setUserid(userid).setMobilephone(mobilephone).setPassword(passwords);
             Integer integer = loginService.loginAdd(login);
-            //新注册用户存入默认头像、存入默认签名
-            userInfo.setUserid(userid).setPassword(passwords).setUimage("/pic/0b0c219d1a134e8b9a7d60c4af27569d.jpg").
+            //新規登録ユーザーが写真を保存する
+            userInfo.setUserid(userid).setPassword(passwords).setUimage("/pic/WechatIMG110.jpg").
                     setSign("初めまして。どうぞよろしくお願いします").setStatus("offline");
             Integer integer1 = userInfoService.userReg(userInfo);
-         //  if (integer==1 && integer1==1){
-                /**注册成功后存入session*/
+
+                /**登録が成功したらsessionにアップロードします*/
                 session.setAttribute("userid",userid);
                 session.setAttribute("username",username);
-                /**存入用户角色信息*/
+                /**存入ユーザー情報を保存する*/
                 userRoleService.InsertUserRole(new UserRole().setUserid(userid).setRoleid(1).setIdentity("サイトユーザー"));
                 UsernamePasswordToken token=new UsernamePasswordToken(mobilephone, new Md5Hash(password,"Campus-shops").toString());
                 Subject subject= SecurityUtils.getSubject();
-              //  subject.login(token);
+
                return new ResultVo(true,StatusCode.OK,"登録に成功");
 
-       //     return new ResultVo(false,StatusCode.ERROR,"注册失败");
-        //}
-     //   return new ResultVo(false,StatusCode.ERROR,"验证码错误");
     }
 
-    /**登录
-     * 1.判断输入账号的类型
-     * 2.登录
+    /**登録する.。
+     1.入力アカウントのタイプを判断する。
+     2.登録する.
      * */
     @ResponseBody
     @PostMapping("/user/login")
@@ -137,29 +125,30 @@ public class LoginController {
         String account=login.getUsername();
         String password=login.getPassword();
         String vercode=login.getVercode();
-        UsernamePasswordToken token;
+        UsernamePasswordToken token; //Tokenを取得して以前登録したことがあるかどうかチェックします
         if(!ValidateCode.code.equalsIgnoreCase(vercode)){
             return new ResultVo(false,StatusCode.ERROR,"正しい検証コードを入力してください");
         }
-        //判断输入的账号是否手机号
+        //入力されたアカウントが携帯電話番号かどうかを判断する
         if (!JustPhone.justPhone(account)) {
-            //输入的是用户名
+            //ユーザー名を入力しました
             String username = account;
-            //盐加密
+            //Md5復号化 Hashアルゴリズム
             token=new UsernamePasswordToken(username, new Md5Hash(password,"Campus-shops").toString());
         }else {
-            //输入的是手机号
+            //携帯電話番号を入力しました
             String mobilephone = account;
             login.setMobilephone(mobilephone);
-            //将封装的login中username变为null
+            //カプセル化されたloginのusernameをnullに変更する
             login.setUsername(null);
-            //盐加密
+            //Md5復号化 Hashアルゴリズム
             token=new UsernamePasswordToken(mobilephone, new Md5Hash(password,"Campus-shops").toString());
         }
         Subject subject= SecurityUtils.getSubject();
         try {
+            //アカウントのパスワードが正しいかどうかを判断する
             subject.login(token);
-            //盐加密
+            //Md5塩暗号化
             String passwords = new Md5Hash(password, "Campus-shops").toString();
             login.setPassword(passwords);
             Login login1 = loginService.userLogin(login);
@@ -245,7 +234,6 @@ public class LoginController {
     public  ResultVo resetpwd(@RequestBody Login login) {
         String mobilephone=login.getMobilephone();
         String password=login.getPassword();
-     //   String vercode=login.getVercode();
         Login login1 = new Login();
         UserInfo userInfo = new UserInfo();
         if (!JustPhone.justPhone(mobilephone)) {//判断输入的手机号格式是否正确
@@ -257,23 +245,16 @@ public class LoginController {
         if (StringUtils.isEmpty(userIsExist)){//用户账号不存在
             return new ResultVo(false, StatusCode.LOGINERROR,"このアカウントは存在しません");
         }
-    //    String rel = phonecodemap2.get(mobilephone);
-   //     if (StringUtils.isEmpty(rel)) {//验证码到期 或者 没发送短信验证码
-     //       return new ResultVo(false,StatusCode.ERROR,"请重新获取验证码");
-    //    }
-     //   if (rel.equalsIgnoreCase(vercode)) {//验证码正确
+
             //盐加密
             String passwords = new Md5Hash(password, "Campus-shops").toString();
             login1.setPassword(passwords).setId(userIsExist.getId()).setMobilephone(null);
             userInfo.setMobilephone(mobilephone).setPassword(passwords).setUserid(userIsExist.getUserid());
             Integer integer = loginService.updateLogin(login1);
             Integer integer1 = userInfoService.UpdateUserInfo(userInfo);
-         //   if (integer==1 && integer1==1){
+
                 return new ResultVo(true,StatusCode.OK,"パスワードのリセットに成功しました");
-          //  }
-       //     return new ResultVo(false,StatusCode.ERROR,"重置密码失败");
-    //    }
-      //  return new ResultVo(false,StatusCode.ERROR,"验证码错误");
+
     }
 
     /**退出登陆*/
@@ -288,6 +269,8 @@ public class LoginController {
         request.getSession().removeAttribute("username");
         return "redirect:/";
     }
+
+
 
 
 }

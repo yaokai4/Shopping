@@ -9,6 +9,8 @@
         <outputRelativeToContentRoot value="true" />
         <module name="shops" />
         <module name="ToyoShopping" />
+        <module name="TuatShopping" />
+        <module name="NihonShopping" />
       </profile>
     </annotationProcessing>
   </component>
