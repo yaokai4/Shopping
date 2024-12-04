@@ -1,5 +1,5 @@
 # KaichiShopping 開智国際大学 
-## 新卒2026
+## 新卒2026  https://yaokai.me
 
 ## 中古ショッピングサイト
 
