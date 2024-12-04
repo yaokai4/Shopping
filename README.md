@@ -3,7 +3,7 @@
 
 ## 中古ショッピングサイト
 
-### このシステムは姚凱が100%自分で開発したです
+### このシステムは姚凱が100%自分で開発したプロジェクトです
 ### メールに連絡hi@yaokai.me
 ### 開発したプロジェクトは主に新卒の活動に参加するためのものです
 
@@ -11,9 +11,9 @@
 
 
 
-#### ソフトウェアアーキテクチャ
-- バックエンドアーキテクチャ  SpringBoot+Spring+MyBatis+MySQL+Maven
-- フロントエンドのアーキテクチャと言語  Html+Css+JavaScript+LayUI+Vue
+#### ソフトウェアアー技術
+- フロントエンド技術  SpringBoot+Spring+MyBatis+MySQL+Maven
+- バックエンド技術  Html+Css+JavaScript+LayUI+Vue
 
 
 #### 開発環境のデプロイメント（インストールする必要があります）
